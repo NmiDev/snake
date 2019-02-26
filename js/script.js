@@ -13,7 +13,7 @@ const app = {
     score : 0, // Score of the player
     timeout : null, // Keep the timeout
 
-    // Init
+    // Init application
     init : function init() {
         // DOM loaded
         console.log("DOM loaded");
@@ -22,7 +22,6 @@ const app = {
         // Check the key press
         document.addEventListener("keydown", app.handleKeyDown);
     },
-
     // Function game init
     gameInit : function gameInit() {
         // Canvas drawing space
@@ -56,8 +55,8 @@ const app = {
                 app.score ++;
                 // Increase speed by 2 each 5 points 
                 if (app.score % 5 === 0) {
-                app.delay = app.delay / 1.5;
-                console.log(app.delay);
+                    // Reducing the delay
+                    app.increaseSpeed();
                 }
                 // Snake ate Apple = true
                 app.snakeBody.ateApple = true;
@@ -257,6 +256,22 @@ const app = {
         const yPosition = position[1] * app.blockSize;
         app.context.fillRect(xPosition, yPosition, app.blockSize, app.blockSize);
     },
+    // Function dranwScore, helpfull to refresh the score during the game
+    drawScore : function drawScore() {
+        // Keep convas context
+        app.context.save();
+        // Style 
+        app.context.font = "bold 65px sans-sherif";
+        app.context.fillStyle = "grey";
+        app.context.textAlign = "center";
+        app.context.textBaseline = "middle";
+        const centerX = app.canvasWidth / 2;
+        const centerY = app.canvasHeight / 2;
+        // Load message
+        app.context.fillText(app.score.toString(), centerX, centerY);
+        // Restort canvas context
+        app.context.restore();
+    },
     // Function handle key down by user
     handleKeyDown : function handleKeyDown(evt) {
         // Key code 
@@ -286,6 +301,10 @@ const app = {
         }
         // Ask to the snake for set the new direction
         app.snakeBody.setDirection(newDirection);
+    },
+    // Function increqse snake speed
+    increaseSpeed : function increaseSpeed() {
+        app.delay /= 1.5;
     },
     // Function game is over
     gameIsOver : function gameIsOver() {
@@ -325,22 +344,6 @@ const app = {
         // Refresh canvas
         app.refreshPosition();
     },
-    // Function dranwScore, helpfull to refresh the score during the game
-    drawScore : function drawScore() {
-        // Keep convas context
-        app.context.save();
-        // Style 
-        app.context.font = "bold 65px sans-sherif";
-        app.context.fillStyle = "grey";
-        app.context.textAlign = "center";
-        app.context.textBaseline = "middle";
-        const centerX = app.canvasWidth / 2;
-        const centerY = app.canvasHeight / 2;
-        // Load message
-        app.context.fillText(app.score.toString(), centerX, centerY);
-        // Restort canvas context
-        app.context.restore();
-    }
 };
 // DOM loaded and start the app
 document.addEventListener('DOMContentLoaded', app.init);
