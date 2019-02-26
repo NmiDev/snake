@@ -1,0 +1,10 @@
+body {
+    padding: 2rem;
+}
+
+#container {
+    border: 20px solid grey;
+    display: block;
+    margin: auto;
+    background-color: #ddd;
+}
