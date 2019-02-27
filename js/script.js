@@ -1,6 +1,6 @@
 const app = {
     // Proprerties
-    canvas : null, // Drawing space
+    canvas : document.createElement("canvas"), // Drawing space
     canvasWidth : 900, // Drawing width
     canvasHeight : 600, // Drawing height
     blockSize : 30, // Snake block square size
@@ -14,30 +14,23 @@ const app = {
     timeout : null, // Keep the timeout
 
     // Init application
-    init : function init() {
-        // DOM loaded
-        console.log("DOM loaded");
-        // Game space init
-        app.gameInit();
-        // Check the key press
-        document.addEventListener("keydown", app.handleKeyDown);
-    },
-    // Function game init
     gameInit : function gameInit() {
+        // DOM loaded
+        console.log("Ready player one");
+
         // Canvas drawing space
-        app.canvas = document.createElement("canvas");
-            app.canvas.setAttribute("id", "container");
-            app.canvas.width = app.canvasWidth;
-            app.canvas.height = app.canvasHeight;
-            document.body.appendChild(app.canvas);
+        app.canvas.setAttribute("id", "container");
+        app.canvas.width = app.canvasWidth;
+        app.canvas.height = app.canvasHeight;
+        document.body.appendChild(app.canvas);
         // Canvas context
         app.context = app.canvas.getContext('2d');
-        // Snake init
-        app.snakeBody = new app.snake([[6,4], [5,4], [4,4], [3,4], [2,4]], "right");
-        // Apple init
-        app.appleBody = new app.apple([10,10]);
-        // Refresh canvas
-        app.refreshPosition();
+
+        // App launch 
+        app.launch();
+
+        // Check the key press
+        document.addEventListener("keydown", app.handleKeyDown);
     },
     // Function refresh position
     refreshPosition : function refreshPosition() {
@@ -293,7 +286,7 @@ const app = {
                 newDirection = "down";
                 break;
             case 32: // Reload game if space key down
-                app.restart();
+                app.launch();
                 break;
         
             default:
@@ -329,8 +322,8 @@ const app = {
         // Restort canvas context
         app.context.restore();
     },
-    // Function restart
-    restart : function restart() {
+    // Function launch
+    launch : function launch() {
         // Snake init
         app.snakeBody = new app.snake([[6,4], [5,4], [4,4], [3,4], [2,4]], "right");
         // Apple init
@@ -346,4 +339,4 @@ const app = {
     },
 };
 // DOM loaded and start the app
-document.addEventListener('DOMContentLoaded', app.init);
+document.addEventListener('DOMContentLoaded', app.gameInit);

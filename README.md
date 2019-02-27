@@ -10,10 +10,11 @@ The purpose of this project is to show my capicties and skills. You can see what
 - JS
 
 *Tecnologies, frameworks and dependencies :*
-
+- Canvas
+- ES6
 
 *Softs and utilities :*
-- Visual Studio Code 1.24
+- Visual Studio Code
 - Git/Github
 - Mamp
 
