@@ -13,8 +13,8 @@ const app = {
     score : 0, // Player score
     timeout : null, // Keep the timeout
     
-    // Init application
-    gameInit : function gameInit() {
+    // Method init application
+    gameInit : () => {
         // DOM loaded
         console.log("Ready player one");
         
@@ -32,8 +32,8 @@ const app = {
         // Check the key press
         document.addEventListener("keydown", app.handleKeyDown);
     },
-    // Function launch
-    launch : function launch() {
+    // Method launch
+    launch : () => {
         // Snake init
         app.snakeBody = new app.snake([[6,4], [5,4], [4,4], [3,4], [2,4]], "right");
         // Apple init
@@ -47,8 +47,8 @@ const app = {
         // Refresh canvas
         app.refreshPosition();
     },
-    // Function refresh position
-    refreshPosition : function refreshPosition() {
+    // Method refresh position
+    refreshPosition : () => {
         // Snake go forward
         app.snakeBody.advance();
         // Snake check road
@@ -85,12 +85,95 @@ const app = {
             app.timeout = setTimeout(app.refreshPosition, app.delay);
         }
     },
-    // Function constructor apple
-    apple : function apple(position) {
-        // Set the apple position
-        this.position = position;
-        // Drawing capacity for apple
-        this.draw = function () {
+    // Method drawing block
+    drawBlock : (position) => {
+        const xPosition = position[0] * app.blockSize;
+        const yPosition = position[1] * app.blockSize;
+        app.context.fillRect(xPosition, yPosition, app.blockSize, app.blockSize);
+    },
+    // Method dranwScore, helpfull to refresh the score during the game
+    drawScore : () => {
+        // Keep convas context
+        app.context.save();
+        // Style 
+        app.context.font = "bold 65px sans-sherif";
+        app.context.fillStyle = "grey";
+        app.context.textAlign = "center";
+        app.context.textBaseline = "middle";
+        const centerX = app.canvasWidth / 2;
+        const centerY = app.canvasHeight / 2;
+        // Load message
+        app.context.fillText(app.score.toString(), centerX, centerY);
+        // Restort canvas context
+        app.context.restore();
+    },
+    // Method handle key down by user
+    handleKeyDown : (evt) => {
+        // Key code 
+        const key = evt.keyCode;
+        // New direction 
+        let newDirection;
+        // Case of direction 
+        switch (key) {
+            case 37:
+                newDirection = "left";
+                break;
+            case 38:
+                newDirection = "up";
+                break;
+            case 39: 
+                newDirection = "right";
+                break;
+            case 40: 
+                newDirection = "down";
+                break;
+            case 32: // Reload game if space key down
+                app.launch();
+                break;
+        
+            default:
+                break;
+        }
+        // Ask to the snake for set the new direction
+        app.snakeBody.setDirection(newDirection);
+    },
+    // Method increase snake speed
+    increaseSpeed : () => {
+        app.delay /= 1.5;
+    },
+    // Method game is over
+    gameIsOver : () => {
+        // Keep convas context
+        app.context.save();
+        // Style 
+        app.context.font = "bold 75px sans-sherif";
+        app.context.fillStyle = "black";
+        app.context.textAlign = "center";
+        app.context.textBaseline = "middle";
+        app.context.strokeStyle = "white";
+        app.context.lineWidth = 5;
+        const centerX = app.canvasWidth / 2;
+        const centerY = app.canvasHeight / 2;
+        // Load message Game over
+        app.context.strokeText("Game Over", centerX, centerY - 180);
+        app.context.fillText("Game Over", centerX, centerY - 180);
+        // Load message Replay
+        app.context.font = "bold 30px sans-sherif";
+        app.context.fillStyle = "black";
+        app.context.fillText("Appuyer sur la touche espace pour relancer le jeu", centerX, centerY - 120);
+        // Restort canvas context
+        app.context.restore();
+    },
+
+    // Class apple
+    apple : class apple {
+        // Constructor
+        constructor(position) {
+            // Set the apple position
+            this.position = position;
+        }
+        // Method drawing capacity for apple
+        draw = () => {
             app.context.save();
             app.context.fillStyle = "#33cc33";
             app.context.beginPath();
@@ -102,14 +185,14 @@ const app = {
 
             app.context.restore();
         }
-        // Capicity to set a new position 
-        this.setNewPosition = function () {
+        // Method to set a new position 
+        setNewPosition = () => {
             const newX = Math.round(Math.random() * (app.widthInBlocks - 1));
             const newY = Math.round(Math.random() * (app.heightInBlocks - 1));
             this.position = [newX, newY];
         }
-        // Capicity to check if the position is set on the snake 
-        this.isOnSnake = function (snakeToCheck) {
+        // Method to check if the position is set on the snake 
+        isOnSnake = (snakeToCheck) => {
             let isOnSnake = false;
             for (let index = 0; index < snakeToCheck.body.length; index++) {
                 if ((this.position[0] === snakeToCheck.body[index][0]) && (this.position[1] === snakeToCheck.body[index][1])){
@@ -119,18 +202,19 @@ const app = {
             return isOnSnake
         }
     },
-    // Function constructor snake
-    snake : function snake(body, direction) {
-
-        // Body of the snake
-        this.body = body;
-        // Direction of the snake
-        this.direction = direction;
-        // If snake ate apple 
-        this.ateApple = false;
-
-        // Drawing method for the snake
-        this.draw = function () {
+    // Class snake
+    snake : class snake {
+        // Constructor
+        constructor(body, direction){
+            // Body of the snake
+            this.body = body;
+            // Direction of the snake
+            this.direction = direction;
+            // If snake ate apple 
+            this.ateApple = false;
+        }
+        // Method drawing
+        draw = () => {
             app.context.save();
             app.context.fillStyle = "#153e7b";
             for (let index = 0; index < this.body.length; index++) {
@@ -138,11 +222,11 @@ const app = {
             }
             app.context.restore();
         }
-        // Go forward method for the snake
-        this.advance = function () {
+        // Method go forward
+        advance = () => {
             // Catch the first position
             const nextPosition = this.body[0].slice();
-            // 
+            // Switch case for direction
             switch (this.direction) {
                 case "left":
                     // Change the first position
@@ -178,8 +262,8 @@ const app = {
                 this.ateApple = false;
             }
         }
-        // Set direction function for the snake
-        this.setDirection = function (newDirection) {
+        // Method set direction
+        setDirection = (newDirection) => {
             // Create const for allowed Direction
             let allowedDirection = "";
             // Case for allowed direction depending of actual direction
@@ -208,8 +292,8 @@ const app = {
                 this.direction = newDirection;
             }
         }
-        //Check road function for the snake
-        this.checkRoad = function () {
+        // Method check road
+        checkRoad = () => {
             // Size of canvas in blocks
             app.widthInBlocks = app.canvasWidth / app.blockSize;
             app.heightInBlocks = app.canvasHeight / app.blockSize;
@@ -247,8 +331,8 @@ const app = {
 
             return snakeImpact || wallImpact;
         }
-        // Check eat apple on the road
-        this.isEatingApple = function (appleToEat) {
+        // Method check if eat apple on the road
+        isEatingApple = (appleToEat) => {
             const head = this.body[0];
 
             if ((head[0] === appleToEat.position[0]) && (head[1]=== appleToEat.position[1])) {
@@ -257,85 +341,6 @@ const app = {
                 return false;
             }
         }
-    },
-    // Function drawing block
-    drawBlock : function drawBlock(position) {
-        const xPosition = position[0] * app.blockSize;
-        const yPosition = position[1] * app.blockSize;
-        app.context.fillRect(xPosition, yPosition, app.blockSize, app.blockSize);
-    },
-    // Function dranwScore, helpfull to refresh the score during the game
-    drawScore : function drawScore() {
-        // Keep convas context
-        app.context.save();
-        // Style 
-        app.context.font = "bold 65px sans-sherif";
-        app.context.fillStyle = "grey";
-        app.context.textAlign = "center";
-        app.context.textBaseline = "middle";
-        const centerX = app.canvasWidth / 2;
-        const centerY = app.canvasHeight / 2;
-        // Load message
-        app.context.fillText(app.score.toString(), centerX, centerY);
-        // Restort canvas context
-        app.context.restore();
-    },
-    // Function handle key down by user
-    handleKeyDown : function handleKeyDown(evt) {
-        // Key code 
-        const key = evt.keyCode;
-        // New direction 
-        let newDirection;
-        // Case of direction 
-        switch (key) {
-            case 37:
-                newDirection = "left";
-                break;
-            case 38:
-                newDirection = "up";
-                break;
-            case 39: 
-                newDirection = "right";
-                break;
-            case 40: 
-                newDirection = "down";
-                break;
-            case 32: // Reload game if space key down
-                app.launch();
-                break;
-        
-            default:
-                break;
-        }
-        // Ask to the snake for set the new direction
-        app.snakeBody.setDirection(newDirection);
-    },
-    // Function increqse snake speed
-    increaseSpeed : function increaseSpeed() {
-        app.delay /= 1.5;
-    },
-    // Function game is over
-    gameIsOver : function gameIsOver() {
-        // Keep convas context
-        app.context.save();
-        // Style 
-        app.context.font = "bold 75px sans-sherif";
-        app.context.fillStyle = "black";
-        app.context.textAlign = "center";
-        app.context.textBaseline = "middle";
-        app.context.strokeStyle = "white";
-        app.context.lineWidth = 5;
-        const centerX = app.canvasWidth / 2;
-        const centerY = app.canvasHeight / 2;
-        // Load message Game over
-        app.context.strokeText("Game Over", centerX, centerY - 180);
-        app.context.fillText("Game Over", centerX, centerY - 180);
-        // Load message Replay
-        app.context.font = "bold 30px sans-sherif";
-        app.context.fillStyle = "black";
-        app.context.fillText("Appuyer sur la touche espace pour relancer le jeu", centerX, centerY - 120);
-        // Restort canvas context
-        app.context.restore();
     },
 };
 // DOM loaded and start the app
