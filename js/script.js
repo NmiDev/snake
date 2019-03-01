@@ -1,23 +1,23 @@
 const app = {
-    // Proprerties
+    // Properties
     canvas : document.createElement("canvas"), // Drawing space
-    canvasWidth : 900, // Drawing width
-    canvasHeight : 600, // Drawing height
+    canvasWidth : 900, // Drawing space width
+    canvasHeight : 600, // Drawing space height
     blockSize : 30, // Snake block square size
     context : null, // Drawing space context
-    delay : 200, // Timing for refresh
-    snakeBody : null, // New Snake 
-    appleBody : null, // New Apple
-    widthInBlocks : 0, // Width of canvas in blocks
-    heightInBlocks : 0, // Height of canvas in blocks
-    score : 0, // Score of the player
+    delay : null, // Timing for refresh the drawing space
+    snakeBody : null, // New Snake container
+    appleBody : null, // New Apple container
+    widthInBlocks : 0, // Width of drawing space in blocks
+    heightInBlocks : 0, // Height of drawing space in blocks
+    score : 0, // Player score
     timeout : null, // Keep the timeout
-
+    
     // Init application
     gameInit : function gameInit() {
         // DOM loaded
         console.log("Ready player one");
-
+        
         // Canvas drawing space
         app.canvas.setAttribute("id", "container");
         app.canvas.width = app.canvasWidth;
@@ -25,12 +25,27 @@ const app = {
         document.body.appendChild(app.canvas);
         // Canvas context
         app.context = app.canvas.getContext('2d');
-
+        
         // App launch 
         app.launch();
-
+        
         // Check the key press
         document.addEventListener("keydown", app.handleKeyDown);
+    },
+    // Function launch
+    launch : function launch() {
+        // Snake init
+        app.snakeBody = new app.snake([[6,4], [5,4], [4,4], [3,4], [2,4]], "right");
+        // Apple init
+        app.appleBody = new app.apple([10,10]);
+        // Score reset
+        app.score = 0;
+        // Delay reset 
+        app.delay = 200;
+        // Clear timeout
+        clearTimeout(app.timeout);
+        // Refresh canvas
+        app.refreshPosition();
     },
     // Function refresh position
     refreshPosition : function refreshPosition() {
@@ -321,21 +336,6 @@ const app = {
         app.context.fillText("Appuyer sur la touche espace pour relancer le jeu", centerX, centerY - 120);
         // Restort canvas context
         app.context.restore();
-    },
-    // Function launch
-    launch : function launch() {
-        // Snake init
-        app.snakeBody = new app.snake([[6,4], [5,4], [4,4], [3,4], [2,4]], "right");
-        // Apple init
-        app.appleBody = new app.apple([10,10]);
-        // Score reset
-        app.score = 0;
-        // Delay reset 
-        app.delay = 200;
-        // Clear timeout
-        clearTimeout(app.timeout);
-        // Refresh canvas
-        app.refreshPosition();
     },
 };
 // DOM loaded and start the app
