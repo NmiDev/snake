@@ -86,7 +86,7 @@ const app = {
         }
     },
     // Method drawing block
-    drawBlock : (position) => {
+    drawBlock : position => {
         const xPosition = position[0] * app.blockSize;
         const yPosition = position[1] * app.blockSize;
         app.context.fillRect(xPosition, yPosition, app.blockSize, app.blockSize);
@@ -108,7 +108,7 @@ const app = {
         app.context.restore();
     },
     // Method handle key down by user
-    handleKeyDown : (evt) => {
+    handleKeyDown : evt => {
         // Key code 
         const key = evt.keyCode;
         // New direction 
