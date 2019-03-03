@@ -35,9 +35,9 @@ const app = {
     // Method launch
     launch : () => {
         // Snake init
-        app.snakeBody = new app.snake([[6,4], [5,4], [4,4], [3,4], [2,4]], "right");
+        app.snakeBody = new app.snake();
         // Apple init
-        app.appleBody = new app.apple([10,10]);
+        app.appleBody = new app.apple();
         // Score reset
         app.score = 0;
         // Delay reset 
@@ -87,9 +87,8 @@ const app = {
     },
     // Method drawing block
     drawBlock : position => {
-        const xPosition = position[0] * app.blockSize;
-        const yPosition = position[1] * app.blockSize;
-        app.context.fillRect(xPosition, yPosition, app.blockSize, app.blockSize);
+        const [x, y] = position;
+        app.context.fillRect(x * app.blockSize, y * app.blockSize, app.blockSize, app.blockSize);
     },
     // Method dranwScore, helpfull to refresh the score during the game
     drawScore : () => {
@@ -168,7 +167,7 @@ const app = {
     // Class apple
     apple : class apple {
         // Constructor
-        constructor(position) {
+        constructor(position = [5,5]) {
             // Set the apple position
             this.position = position;
         }
@@ -194,8 +193,8 @@ const app = {
         // Method to check if the position is set on the snake 
         isOnSnake(snakeToCheck) {
             let isOnSnake = false;
-            for (let index = 0; index < snakeToCheck.body.length; index++) {
-                if ((this.position[0] === snakeToCheck.body[index][0]) && (this.position[1] === snakeToCheck.body[index][1])){
+            for (const block of snakeToCheck.body) {
+                if ((this.position[0] === block[0]) && (this.position[1] === block[1])){
                     isOnSnake = true;
                 }
             }
@@ -205,7 +204,7 @@ const app = {
     // Class snake
     snake : class snake {
         // Constructor
-        constructor(body, direction){
+        constructor(body = [[6,4], [5,4], [4,4], [3,4], [2,4]] , direction = "right"){
             // Body of the snake
             this.body = body;
             // Direction of the snake
@@ -217,8 +216,8 @@ const app = {
         draw() {
             app.context.save();
             app.context.fillStyle = "#153e7b";
-            for (let index = 0; index < this.body.length; index++) {
-                app.drawBlock(this.body[index]);  
+            for (const block of this.body) {
+                app.drawBlock(block); 
             }
             app.context.restore();
         }
@@ -297,18 +296,14 @@ const app = {
             // Size of canvas in blocks
             app.widthInBlocks = app.canvasWidth / app.blockSize;
             app.heightInBlocks = app.canvasHeight / app.blockSize;
-            // Boolean for wall impact
+            // Init Boolean for wall impact
             let wallImpact = false;
-            // Boolean for snake body impact
+            // Init Boolean for snake body impact
             let snakeImpact = false;
-            // Snake head value
-            const head = this.body[0];
-            // End of the snake body
-            const rest = this.body.slice(1);
-            // X snake head position
-            const snakeX = head[0];
-            // Y snake head position
-            const snakeY = head[1];
+            // Snake head and body rest
+            const [head, ...rest] = this.body;
+            // Snake head position
+            const [snakeX, snakeY] = head;
             // Value of correct head position 
             const minX = 0;
             const minY = 0
@@ -323,8 +318,8 @@ const app = {
             };
 
             // Check body impact
-            for (let index = 0; index < rest.length; index++) {
-                if ((snakeX === rest[index][0]) && (snakeY === rest[index][1])) {
+            for (const block of rest) {
+                if ((snakeX === block[0]) && (snakeY === block[1])) {
                     snakeImpact = true;
                 }  
             }
