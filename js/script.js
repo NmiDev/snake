@@ -173,7 +173,7 @@ const app = {
             this.position = position;
         }
         // Method drawing capacity for apple
-        draw = () => {
+        draw() {
             app.context.save();
             app.context.fillStyle = "#33cc33";
             app.context.beginPath();
@@ -186,13 +186,13 @@ const app = {
             app.context.restore();
         }
         // Method to set a new position 
-        setNewPosition = () => {
+        setNewPosition() {
             const newX = Math.round(Math.random() * (app.widthInBlocks - 1));
             const newY = Math.round(Math.random() * (app.heightInBlocks - 1));
             this.position = [newX, newY];
         }
         // Method to check if the position is set on the snake 
-        isOnSnake = (snakeToCheck) => {
+        isOnSnake(snakeToCheck) {
             let isOnSnake = false;
             for (let index = 0; index < snakeToCheck.body.length; index++) {
                 if ((this.position[0] === snakeToCheck.body[index][0]) && (this.position[1] === snakeToCheck.body[index][1])){
@@ -214,7 +214,7 @@ const app = {
             this.ateApple = false;
         }
         // Method drawing
-        draw = () => {
+        draw() {
             app.context.save();
             app.context.fillStyle = "#153e7b";
             for (let index = 0; index < this.body.length; index++) {
@@ -223,7 +223,7 @@ const app = {
             app.context.restore();
         }
         // Method go forward
-        advance = () => {
+        advance() {
             // Catch the first position
             const nextPosition = this.body[0].slice();
             // Switch case for direction
@@ -263,7 +263,7 @@ const app = {
             }
         }
         // Method set direction
-        setDirection = (newDirection) => {
+        setDirection(newDirection) {
             // Create const for allowed Direction
             let allowedDirection = "";
             // Case for allowed direction depending of actual direction
@@ -293,7 +293,7 @@ const app = {
             }
         }
         // Method check road
-        checkRoad = () => {
+        checkRoad() {
             // Size of canvas in blocks
             app.widthInBlocks = app.canvasWidth / app.blockSize;
             app.heightInBlocks = app.canvasHeight / app.blockSize;
@@ -332,7 +332,7 @@ const app = {
             return snakeImpact || wallImpact;
         }
         // Method check if eat apple on the road
-        isEatingApple = (appleToEat) => {
+        isEatingApple(appleToEat) {
             const head = this.body[0];
 
             if ((head[0] === appleToEat.position[0]) && (head[1]=== appleToEat.position[1])) {
