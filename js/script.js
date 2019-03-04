@@ -1,89 +1,18 @@
 const app = {
     // Properties
-    canvas : document.createElement("canvas"), // Drawing space
-    canvasWidth : 900, // Drawing space width
-    canvasHeight : 600, // Drawing space height
-    blockSize : 30, // Snake block square size
-    context : null, // Drawing space context
-    delay : null, // Timing for refresh the drawing space
-    snakeBody : null, // New Snake container
-    appleBody : null, // New Apple container
-    widthInBlocks : 0, // Width of drawing space in blocks
-    heightInBlocks : 0, // Height of drawing space in blocks
-    score : 0, // Player score
-    timeout : null, // Keep the timeout
-    
+    instance : null, // Catch the game instance  
+
     // Method init application
     gameInit : () => {
         // DOM loaded
         console.log("Ready player one");
         
-        // Canvas drawing space
-        app.canvas.setAttribute("id", "container");
-        app.canvas.width = app.canvasWidth;
-        app.canvas.height = app.canvasHeight;
-        document.body.appendChild(app.canvas);
-        // Canvas context
-        app.context = app.canvas.getContext('2d');
-        
-        // App launch 
-        app.launch();
+        // Init game
+        app.instance = new app.game();
+        app.instance.init();
         
         // Check the key press
         document.addEventListener("keydown", app.handleKeyDown);
-    },
-    // Method launch
-    launch : () => {
-        // Snake init
-        app.snakeBody = new app.snake();
-        // Apple init
-        app.appleBody = new app.apple();
-        // Score reset
-        app.score = 0;
-        // Delay reset 
-        app.delay = 200;
-        // Clear timeout
-        clearTimeout(app.timeout);
-        // Refresh canvas
-        app.refreshDisplay();
-    },
-    // Method refresh position
-    refreshDisplay : () => {
-        // Snake go forward
-        app.snakeBody.advance();
-        // Snake check road
-        if (app.snakeBody.checkRoad()) {
-            // Game over
-            app.drawing.gameIsOver(app.context, app.canvasWidth, app.canvasHeight);
-        }
-        else {
-            // Check if snake ate apple
-            if (app.snakeBody.isEatingApple(app.appleBody)) {
-                // Score ++
-                app.score ++;
-                // Increase speed by 2 each 5 points 
-                if (app.score % 5 === 0) {
-                    // Reducing the delay
-                    app.increaseSpeed();
-                }
-                // Snake ate Apple = true
-                app.snakeBody.ateApple = true;
-                // Set a new position until new position is on the current snake
-                do {
-                    app.appleBody.setNewPosition();
-                } while (app.appleBody.isOnSnake(app.snakeBody));
-            }
-            // Clear canvas
-            app.context.clearRect(0, 0, app.canvasWidth, app.canvasHeight);
-            // Score refresh
-            app.drawing.drawScore(app.context, app.canvasWidth, app.canvasHeight, app.score);
-            // Snake drawing
-            app.drawing.drawSnake(app.context, app.snakeBody, app.blockSize);
-            // Apple drawing
-            app.drawing.drawApple(app.context, app.appleBody, app.blockSize);
-            // Timeout
-            app.timeout = setTimeout(app.refreshDisplay, app.delay);
-        }
     },
     // Method handle key down by user
     handleKeyDown : evt => {
@@ -106,20 +35,104 @@ const app = {
                 newDirection = "down";
                 break;
             case 32: // Reload game if space key down
-                app.launch();
+                app.instance.launch();
                 break;
         
             default:
                 break;
         }
         // Ask to the snake for set the new direction
-        app.snakeBody.setDirection(newDirection);
-    },
-    // Method increase snake speed
-    increaseSpeed : () => {
-        app.delay /= 1.5;
+        app.instance.snakeBody.setDirection(newDirection);
     },
 
+    // Class Game
+    game : class Game {
+        // Constructor
+        constructor(){
+            this.canvas = document.createElement("canvas"); // Drawing space
+            this.canvasWidth = 900; // Drawing space width
+            this.canvasHeight = 600; // Drawing space height
+            this.blockSize = 30; // Snake block square size
+            this.context = this.canvas.getContext('2d'); // Drawing space context
+            this.widthInBlocks = this.canvasWidth / this.blockSize; // Width of drawing space in blocks
+            this.heightInBlocks = this.canvasHeight / this.blockSize; // Height of drawing space in blocks
+            this.delay; // Timing for refresh the drawing space
+            this.snakeBody; // New Snake container
+            this.appleBody; // New Apple container
+            this.score; // Player score
+            this.timeout; // Keep the timeout
+        }
+        // Method init 
+        init() {
+            this.canvas.width = this.canvasWidth;
+            this.canvas.height = this.canvasHeight;
+            this.canvas.setAttribute("id", "container");
+            // TODO: cleaning and comment this section
+            // this.canvas.style.border = "30px solid gray";
+            // this.canvas.style.margin = "50px auto";
+            // this.canvas.display = "block";
+            // this.canvas.backgroundColor = "ddd";
+            document.body.appendChild(this.canvas);
+            this.launch();
+        }
+        // Method launch
+        launch() {
+            // Snake init
+            this.snakeBody = new app.snake();
+            // Apple init
+            this.appleBody = new app.apple();
+            // Score reset
+            this.score = 0;
+            // Delay reset 
+            this.delay = 200;
+            // Clear timeout
+            clearTimeout(this.timeout);
+            // Refresh canvas
+            this.refreshDisplay();
+        };
+        // Method refresh position
+        refreshDisplay() {
+            // Snake go forward
+            this.snakeBody.advance();
+            // Snake check road
+            if (this.snakeBody.checkRoad(this.widthInBlocks, this.heightInBlocks)) {
+                // Game over
+                app.drawing.gameIsOver(this.context, this.canvasWidth, this.canvasHeight);
+            }
+            else {
+                // Check if snake ate apple
+                if (this.snakeBody.isEatingApple(this.appleBody)) {
+                    // Score ++
+                    this.score ++;
+                    // Increase speed by 2 each 5 points 
+                    if (this.score % 5 === 0) {
+                        // Reducing the delay
+                        this.increaseSpeed();
+                    }
+                    // Snake ate Apple = true
+                    this.snakeBody.ateApple = true;
+                    // Set a new position until new position is on the current snake
+                    do {
+                        this.appleBody.setNewPosition(this.widthInBlocks, this.heightInBlocks);
+                    } while (this.appleBody.isOnSnake(this.snakeBody));
+                }
+                // Clear canvas
+                this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+                // Score refresh
+                app.drawing.drawScore(this.context, this.canvasWidth, this.canvasHeight, this.score);
+                // Snake drawing
+                app.drawing.drawSnake(this.context, this.snakeBody, this.blockSize);
+                // Apple drawing
+                app.drawing.drawApple(this.context, this.appleBody, this.blockSize);
+                // Timeout
+                this.timeout = setTimeout(this.refreshDisplay.bind(this), this.delay);
+            }
+        };
+        // Method increase snake speed
+        increaseSpeed() {
+            this.delay /= 1.5;
+        };
+    },
     // Class Apple
     apple : class Apple {
         // Constructor
@@ -128,9 +141,9 @@ const app = {
             this.position = position;
         }
         // Method to set a new position 
-        setNewPosition() {
-            const newX = Math.round(Math.random() * (app.widthInBlocks - 1));
-            const newY = Math.round(Math.random() * (app.heightInBlocks - 1));
+        setNewPosition(widthInBlocks, heightInBlocks) {
+            const newX = Math.round(Math.random() * (widthInBlocks - 1));
+            const newY = Math.round(Math.random() * (heightInBlocks - 1));
             this.position = [newX, newY];
         }
         // Method to check if the position is set on the snake 
@@ -226,10 +239,7 @@ const app = {
             }
         }
         // Method check road
-        checkRoad() {
-            // Size of canvas in blocks
-            app.widthInBlocks = app.canvasWidth / app.blockSize;
-            app.heightInBlocks = app.canvasHeight / app.blockSize;
+        checkRoad(widthInBlocks, heightInBlocks) {
             // Init Boolean for wall impact
             let wallImpact = false;
             // Init Boolean for snake body impact
@@ -241,8 +251,8 @@ const app = {
             // Value of correct head position 
             const minX = 0;
             const minY = 0
-            const maxX = app.widthInBlocks - 1;
-            const maxY = app.heightInBlocks - 1;
+            const maxX = widthInBlocks - 1;
+            const maxY = heightInBlocks - 1;
             const badXposition = snakeX < minX || snakeX > maxX ;
             const badYposition = snakeY < minY || snakeY > maxY ;
 
@@ -264,7 +274,7 @@ const app = {
         isEatingApple(appleToEat) {
             const head = this.body[0];
 
-            if ((head[0] === appleToEat.position[0]) && (head[1]=== appleToEat.position[1])) {
+            if ((head[0] === appleToEat.position[0]) && (head[1] === appleToEat.position[1])) {
                 return true
             } else {
                 return false;
@@ -298,7 +308,7 @@ const app = {
             // Canvas fill
             context.fill();
             // Restort canvas context
-            app.context.restore();
+            context.restore();
         }
         static drawBlock(context, position, blockSize){
             // new block position
@@ -310,7 +320,7 @@ const app = {
             // Keep convas context
             context.save();
             // Style 
-            app.context.font = "bold 65px sans-sherif";
+            context.font = "bold 65px sans-sherif";
             context.fillStyle = "grey";
             context.textAlign = "center";
             context.textBaseline = "middle";
