@@ -7,11 +7,11 @@ The purpose of this project is to show my capicties and skills. You can see what
 *Languages :*
 - Html
 - CSS
-- JS
+- JavaScript, ES6 (Let, const, class, Rest parameters, ...)
 
 *Tecnologies, frameworks and dependencies :*
 - Canvas
-- ES6
+- POO
 
 *Softs and utilities :*
 - Visual Studio Code
