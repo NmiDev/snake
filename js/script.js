@@ -45,16 +45,16 @@ const app = {
         // Clear timeout
         clearTimeout(app.timeout);
         // Refresh canvas
-        app.refreshPosition();
+        app.refreshDisplay();
     },
     // Method refresh position
-    refreshPosition : () => {
+    refreshDisplay : () => {
         // Snake go forward
         app.snakeBody.advance();
         // Snake check road
         if (app.snakeBody.checkRoad()) {
             // Game over
-            app.gameIsOver();
+            app.drawing.gameIsOver(app.context, app.canvasWidth, app.canvasHeight);
         }
         else {
             // Check if snake ate apple
@@ -76,35 +76,14 @@ const app = {
             // Clear canvas
             app.context.clearRect(0, 0, app.canvasWidth, app.canvasHeight);
             // Score refresh
-            app.drawScore();
+            app.drawing.drawScore(app.context, app.canvasWidth, app.canvasHeight, app.score);
             // Snake drawing
-            app.snakeBody.draw();
+            app.drawing.drawSnake(app.context, app.snakeBody, app.blockSize);
             // Apple drawing
-            app.appleBody.draw();
+            app.drawing.drawApple(app.context, app.appleBody, app.blockSize);
             // Timeout
-            app.timeout = setTimeout(app.refreshPosition, app.delay);
+            app.timeout = setTimeout(app.refreshDisplay, app.delay);
         }
-    },
-    // Method drawing block
-    drawBlock : position => {
-        const [x, y] = position;
-        app.context.fillRect(x * app.blockSize, y * app.blockSize, app.blockSize, app.blockSize);
-    },
-    // Method dranwScore, helpfull to refresh the score during the game
-    drawScore : () => {
-        // Keep convas context
-        app.context.save();
-        // Style 
-        app.context.font = "bold 65px sans-sherif";
-        app.context.fillStyle = "grey";
-        app.context.textAlign = "center";
-        app.context.textBaseline = "middle";
-        const centerX = app.canvasWidth / 2;
-        const centerY = app.canvasHeight / 2;
-        // Load message
-        app.context.fillText(app.score.toString(), centerX, centerY);
-        // Restort canvas context
-        app.context.restore();
     },
     // Method handle key down by user
     handleKeyDown : evt => {
@@ -140,49 +119,13 @@ const app = {
     increaseSpeed : () => {
         app.delay /= 1.5;
     },
-    // Method game is over
-    gameIsOver : () => {
-        // Keep convas context
-        app.context.save();
-        // Style 
-        app.context.font = "bold 75px sans-sherif";
-        app.context.fillStyle = "black";
-        app.context.textAlign = "center";
-        app.context.textBaseline = "middle";
-        app.context.strokeStyle = "white";
-        app.context.lineWidth = 5;
-        const centerX = app.canvasWidth / 2;
-        const centerY = app.canvasHeight / 2;
-        // Load message Game over
-        app.context.strokeText("Game Over", centerX, centerY - 180);
-        app.context.fillText("Game Over", centerX, centerY - 180);
-        // Load message Replay
-        app.context.font = "bold 30px sans-sherif";
-        app.context.fillStyle = "black";
-        app.context.fillText("Appuyer sur la touche espace pour relancer le jeu", centerX, centerY - 120);
-        // Restort canvas context
-        app.context.restore();
-    },
 
-    // Class apple
-    apple : class apple {
+    // Class Apple
+    apple : class Apple {
         // Constructor
         constructor(position = [5,5]) {
             // Set the apple position
             this.position = position;
-        }
-        // Method drawing capacity for apple
-        draw() {
-            app.context.save();
-            app.context.fillStyle = "#33cc33";
-            app.context.beginPath();
-            const radius = app.blockSize / 2;
-            const xPosition = this.position[0]*app.blockSize + radius;
-            const yPosition = this.position[1]*app.blockSize + radius;
-            app.context.arc(xPosition, yPosition, radius, 0, Math.PI*2, true);
-            app.context.fill();
-
-            app.context.restore();
         }
         // Method to set a new position 
         setNewPosition() {
@@ -201,8 +144,8 @@ const app = {
             return isOnSnake
         }
     },
-    // Class snake
-    snake : class snake {
+    // Class Snake
+    snake : class Snake {
         // Constructor
         constructor(body = [[6,4], [5,4], [4,4], [3,4], [2,4]] , direction = "right"){
             // Body of the snake
@@ -211,15 +154,6 @@ const app = {
             this.direction = direction;
             // If snake ate apple 
             this.ateApple = false;
-        }
-        // Method drawing
-        draw() {
-            app.context.save();
-            app.context.fillStyle = "#153e7b";
-            for (const block of this.body) {
-                app.drawBlock(block); 
-            }
-            app.context.restore();
         }
         // Method go forward
         advance() {
@@ -335,6 +269,79 @@ const app = {
             } else {
                 return false;
             }
+        }
+    },
+    // Class Drawing
+    drawing : class Drawing {
+        // Methods
+        static drawSnake(context, snake, blockSize) {
+            // Keep canvas context
+            context.save();
+            // Canvas fill
+            context.fillStyle = "#153e7b";
+            for (const block of snake.body) {
+                this.drawBlock(context, block, blockSize); 
+            }
+            // Restort canvas context
+            context.restore();
+        }
+        static drawApple(context, apple , blockSize){
+            // Keep canvas context
+            context.save();
+            // Styles and mesures
+            context.fillStyle = "#33cc33";
+            context.beginPath();
+            const radius = blockSize / 2;
+            const xPosition = apple.position[0]*blockSize + radius;
+            const yPosition = apple.position[1]*blockSize + radius;
+            context.arc(xPosition, yPosition, radius, 0, Math.PI*2, true);
+            // Canvas fill
+            context.fill();
+            // Restort canvas context
+            app.context.restore();
+        }
+        static drawBlock(context, position, blockSize){
+            // new block position
+            const [x, y] = position;
+            // Canvas fill
+            context.fillRect(x * blockSize, y * blockSize, blockSize, blockSize);
+        }
+        static drawScore(context, canvasWidth, canvasHeight, score) {
+            // Keep convas context
+            context.save();
+            // Style 
+            app.context.font = "bold 65px sans-sherif";
+            context.fillStyle = "grey";
+            context.textAlign = "center";
+            context.textBaseline = "middle";
+            const centerX = canvasWidth / 2;
+            const centerY = canvasHeight / 2;
+            // Load message
+            context.fillText(score.toString(), centerX, centerY);
+            // Restort canvas context
+            context.restore();
+        }
+        static gameIsOver(context, canvasWidth, canvasHeight) {
+            // Keep convas context
+            context.save();
+            // Style 
+            context.font = "bold 75px sans-sherif";
+            context.fillStyle = "black";
+            context.textAlign = "center";
+            context.textBaseline = "middle";
+            context.strokeStyle = "white";
+            context.lineWidth = 5;
+            const centerX = canvasWidth / 2;
+            const centerY = canvasHeight / 2;
+            // Load message Game over
+            context.strokeText("Game Over", centerX, centerY - 180);
+            context.fillText("Game Over", centerX, centerY - 180);
+            // Load message Replay
+            context.font = "bold 30px sans-sherif";
+            context.fillStyle = "black";
+            context.fillText("Appuyer sur la touche espace pour relancer le jeu", centerX, centerY - 120);
+            // Restort canvas context
+            context.restore();
         }
     },
 };
