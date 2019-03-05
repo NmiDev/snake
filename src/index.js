@@ -1,5 +1,8 @@
 // Imports
-import Game from "./game.js";
+import Game from "./js/game.js";
+
+// Imports CSS
+import style from "./styles/index.css";
 
 // Application
 const app = {
