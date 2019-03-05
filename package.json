@@ -4,7 +4,6 @@
   "description": "John Coder original idea",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack --mode development ./src/index.js --output ./dist/main_dev.js",
     "build": "webpack --mode production",
     "start": "webpack-dev-server --mode development --open"
@@ -31,5 +30,8 @@
     "webpack": "^4.29.6",
     "webpack-cli": "^3.2.3",
     "webpack-dev-server": "^3.2.1"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.26.0"
   }
 }

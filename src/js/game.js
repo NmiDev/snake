@@ -87,6 +87,6 @@ export default class Game {
     };
     // Method increase snake speed
     increaseSpeed() {
-        this.delay /= 1.5;
+        this.delay /= 1.2;
     };
 };

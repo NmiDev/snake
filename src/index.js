@@ -1,4 +1,5 @@
 // Imports
+import "babel-polyfill";
 import Game from "./js/game.js";
 
 // Imports CSS

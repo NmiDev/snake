@@ -1,7 +1,19 @@
+const path = require('path');
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
+  // Set the entry point
+  entry: [
+    "babel-polyfill", // Babel Polyfill utility
+    "./src/index.js"
+  ],
+  // Set the output
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: "app.js"
+  },
+  // Module configuration
   module: {
     rules: [
       {
@@ -26,6 +38,7 @@ module.exports = {
       }
     ]
   },
+  // Plugins configuration
   plugins: [
     new HtmlWebPackPlugin({
       template: "./src/index.html",

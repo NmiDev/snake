@@ -5,7 +5,7 @@ export default class Drawing {
         // Keep canvas context
         context.save();
         // Canvas fill
-        context.fillStyle = "#153e7b";
+        context.fillStyle = "#2A4616";
         for (const block of snake.body) {
             this.drawBlock(context, block, blockSize); 
         }
@@ -16,7 +16,7 @@ export default class Drawing {
         // Keep canvas context
         context.save();
         // Styles and mesures
-        context.fillStyle = "#33cc33";
+        context.fillStyle = "#F34A3A";
         context.beginPath();
         const radius = blockSize / 2;
         const xPosition = apple.position[0]*blockSize + radius;
