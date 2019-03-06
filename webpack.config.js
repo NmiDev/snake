@@ -2,6 +2,7 @@ const path = require('path');
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 
 module.exports = {
   // Set the entry point
@@ -14,9 +15,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     filename: "app.js"
   },
-  // Devtools
-  // devtool: "source-map",
-  // Module configuration
+  // Loaders module configuration
   module: {
     rules: [
       {
@@ -38,7 +37,24 @@ module.exports = {
       {
         test: /\.css$/,
         use: [MiniCssExtractPlugin.loader, "css-loader"]
-      }
+      },
+      {
+        test: /\.(png|svg|jpg|gif)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              outputPath: 'assets/img/',
+            },
+          },
+        ],
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/,
+        use: {
+          loader: "file-loader",
+        },
+      },
     ]
   },
   // Plugins configuration
@@ -53,6 +69,10 @@ module.exports = {
     }),
     new UglifyJsPlugin({
       
+    }),
+    new FaviconsWebpackPlugin({
+      logo: './src/assets/img/favicon.png',
+      inject: true
     }),
   ]
 };

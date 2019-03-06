@@ -1,12 +1,91 @@
-body {
-    padding: 2rem;
-    background-color: rgb(215, 222, 201)
+/* Fonts import */
+@font-face {
+    font-family: "Joystix";
+    src: url("../assets/fonts/joystix.ttf") format("truetype");
+  }  
+/* Generic rules */
+*  {
+    box-sizing: border-box;
 }
 
-#container {
-    border: 7px solid #0A2000;
-    border-radius: 15px ;
-    display: block;
-    margin: auto;
+body {
+    font-family: "Joystix";
+    font-size: 1.6rem;
     background-color: #BEDC91;
+}
+
+.links {
+    font-weight: bolder;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.links::after {
+    margin-top: 0.1rem;
+    content: '';
+    display: block;
+    width: 0;
+    height: 2px;
+    background: #8F00B2;
+    transition: width .3s;
+}
+
+.links:hover::after {
+    width: 100%;
+    transition: width .3s;
+}
+
+.links:visited {
+    color: inherit;
+}
+
+/* Combine rules */
+#header, #app, #footer {
+    width: 904px;
+    margin: auto;
+    margin: 1rem auto;
+}
+
+#header, #app {
+    border: 2px solid #0A2000;
+    border-radius: 10px ;
+    box-shadow: 0px 0px 10px 2px #0A2000;
+}
+
+#header, #footer {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    height: 100px;
+    align-items: center;
+}
+
+/* Inside header */
+#logo-message {
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
+    margin-left: 2rem;
+}
+
+#logo-img {
+    max-height: 75px;
+}
+
+#logo-controls {
+    font-size: 1rem;
+}
+
+/* Inside App */
+#app {
+    height: 604px;
+    background-color: #99FF00;
+}
+
+/* Inside footer */
+#footer {
+    color: #8F00B2;
+    font-family: arial;
+    font-size: 1.1rem;
+    align-items: flex-start;
 }

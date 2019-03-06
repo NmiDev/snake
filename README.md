@@ -1,6 +1,6 @@
 # Snake Game
 
-The purpose of this project is to show my capicties and skills. You can see what I learn for the pleasure or during my training and career path. (Inspiration from [John](https://apprendre-a-coder.com/), full JavaScript course !)
+The purpose of this project is to show my capicties and skills. You can see what I learn for the pleasure or during my training and career path. (Inspiration from [John](https://apprendre-a-coder.com/), full JavaScript course !). Special thanks for Martin Wolf (links hover effect) and freepik.com (snake logo). Nokia Snake forever :heart_eyes:
 
 ## More informations
 
@@ -12,6 +12,9 @@ The purpose of this project is to show my capicties and skills. You can see what
 *Tecnologies, frameworks and dependencies :*
 - Canvas
 - POO
+- Webpack
+- Babel and Babel polyfill
+- And many more, please check the package.json file
 
 *Softs and utilities :*
 - Visual Studio Code

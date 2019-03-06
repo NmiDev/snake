@@ -25,12 +25,11 @@ export default class Game {
         // Set the canvas width and height
         this.canvas.width = this.canvasWidth;
         this.canvas.height = this.canvasHeight;
-        // Set the id attribute to canvas 
-        this.canvas.setAttribute("id", "container");
-        // Append the canvas to the body
-        document.body.appendChild(this.canvas);
-        // Launch the game
-        this.launch();
+        // Append the canvas to the container
+        document.getElementById("app").appendChild(this.canvas);
+        // Drawing inital score 0
+        Drawing.drawScore(this.context, 0);
+
     }
     // Method launch
     launch() {
@@ -75,12 +74,12 @@ export default class Game {
             }
             // Clear canvas
             this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-            // Score refresh
-            Drawing.drawScore(this.context, this.canvasWidth, this.canvasHeight, this.score);
             // Snake drawing
             Drawing.drawSnake(this.context, this.snakeBody, this.blockSize);
             // Apple drawing
             Drawing.drawApple(this.context, this.appleBody, this.blockSize);
+            // Score refresh
+            Drawing.drawScore(this.context, this.score);
             // Timeout
             this.timeout = setTimeout(this.refreshDisplay.bind(this), this.delay);
         }
