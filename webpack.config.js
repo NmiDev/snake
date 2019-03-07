@@ -2,7 +2,7 @@ const path = require('path');
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 module.exports = {
   // Set the entry point
@@ -22,7 +22,7 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader"
+          loader: "babel-loader",
         }
       },
       {
@@ -36,10 +36,13 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, "css-loader"]
+        use: [
+          MiniCssExtractPlugin.loader,
+          "css-loader"
+        ]
       },
       {
-        test: /\.(png|svg|jpg|gif)$/,
+        test: /\.(png|svg|jpg|gif|ico)$/,
         use: [
           {
             loader: 'file-loader',
@@ -53,6 +56,9 @@ module.exports = {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
         use: {
           loader: "file-loader",
+          options: {
+            outputPath: 'assets/fonts/',
+          },
         },
       },
     ]
@@ -61,18 +67,17 @@ module.exports = {
   plugins: [
     new HtmlWebPackPlugin({
       template: "./src/index.html",
-      filename: "./index.html"
+      filename: "./index.html",
     }),
     new MiniCssExtractPlugin({
       filename: "[name].css",
       chunkFilename: "[id].css"
     }),
     new UglifyJsPlugin({
-      
+
     }),
-    new FaviconsWebpackPlugin({
-      logo: './src/assets/img/favicon.png',
-      inject: true
+    new OptimizeCSSAssetsPlugin({
+
     }),
   ]
 };

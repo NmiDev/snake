@@ -6,6 +6,9 @@ import Game from "./js/game.js";
 import reset from "./styles/reset.css";
 import style from "./styles/index.css";
 
+// Import favicon
+import favicon from "./assets/img/favicon.ico";
+
 // Application
 const app = {
     // Properties
