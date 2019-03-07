@@ -6,9 +6,6 @@ import Game from "./js/game.js";
 import reset from "./styles/reset.css";
 import style from "./styles/index.css";
 
-// Import favicon
-import favicon from "./assets/img/favicon.ico";
-
 // Application
 const app = {
     // Properties
@@ -53,8 +50,11 @@ const app = {
             default:
                 break;
         }
-        // Ask to the snake for set the new direction
-        app.instance.snakeBody.setDirection(newDirection);
+        // Check if game is in progress
+        if (app.instance.snakeBody !== undefined) {
+          // Ask to the snake for set the new direction
+          app.instance.snakeBody.setDirection(newDirection);
+        }
     },
 
 };
