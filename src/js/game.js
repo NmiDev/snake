@@ -27,9 +27,6 @@ export default class Game {
         this.canvas.height = this.canvasHeight;
         // Append the canvas to the container
         document.getElementById("app").appendChild(this.canvas);
-        // Drawing inital score 0
-        Drawing.drawScore(this.context, 0);
-
     }
     // Method launch
     launch() {

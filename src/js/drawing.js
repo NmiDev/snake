@@ -5,7 +5,7 @@ export default class Drawing {
         // Keep canvas context
         context.save();
         // Canvas fill
-        context.fillStyle = "black";
+        context.fillStyle = "rgba(0, 0, 0, 0.75)";
         for (const block of snake.body) {
             this.drawBlock(context, block, blockSize); 
         }
