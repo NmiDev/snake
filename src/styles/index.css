@@ -74,6 +74,9 @@ body {
 
 #logo-controls {
     font-size: 1rem;
+    animation-duration: 2s;
+    animation-name: opacity;
+    animation-iteration-count: infinite;
 }
 
 /* Inside App */
@@ -89,3 +92,14 @@ body {
     font-size: 1.1rem;
     align-items: flex-start;
 }
+
+/* Animation */
+@keyframes opacity {
+    from {
+        color: #BEDC91;
+    }
+  
+    to {
+        color: black;
+    }
+  }
