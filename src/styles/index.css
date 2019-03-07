@@ -73,6 +73,7 @@ body {
 }
 
 #logo-controls {
+    margin-top: 0.5rem;
     font-size: 1rem;
     animation-duration: 2s;
     animation-name: opacity;
