@@ -1,5 +1,7 @@
 # Snake Game
 
+![Alt Text](https://media.giphy.com/media/3eUOGPTuZPXybH37Kh/giphy.gif)
+
 The purpose of this project is to show my capicties and skills. You can see what I learn for the pleasure or during my training and career path. (Inspiration from [John](https://apprendre-a-coder.com/), full JavaScript course !). Special thanks for Martin Wolf (links hover effect) and freepik.com (snake logo). Nokia Snake forever :heart_eyes:
 
 ## More informations
